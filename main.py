@@ -176,6 +176,9 @@ class Main(QMainWindow):
 
         self.show()
 
+        self.actionViewSymbolsToolbar.setChecked(self.toolBarSymbols.isVisible())
+        self.actionViewTemplatesToolbar.setChecked(self.toolBarTemplates.isVisible())
+
         self.actionViewBookmarks.setChecked(self.dockWidgetBookmarks.isVisible())
         self.actionViewHistory.setChecked(self.dockWidgetHistory.isVisible())
 
