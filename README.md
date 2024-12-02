@@ -12,9 +12,13 @@ It instead uses bundled versions of [ziamath](https://github.com/cdelker/ziamath
 * TeX
 * TIFF
 
+## Screenshot
+*EqualZ in Windows 11*  
+![EqualZ in Windows 131](screenshots/equalz_win11.png)
+
 ## Notes
 To keep the file size and memory consumption of the frozen .exe small, it uses a slightly adjusted private copy of CairoSVG (renamed to "cairosvg_min") that has the dependancy on Pillow (which in turn would depend on Numpy) removed - CairoSVG uses Pillow only for a feature that EqualZ doesn't need anyway. But EqualZ works perfectly fine also with the original unaltered version of CairoSVG, just change the import at the top of main.py accordingly.
 
-## Screenshots
-*EqualZ in Windows 11*  
-![EqualZ in Windows 131](screenshots/equalz_win11.png)
+## ToDos
+* Create frozen release for macOS as well
+* Possibly add support for MathML in addition to LaTeX Math
