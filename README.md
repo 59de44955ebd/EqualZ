@@ -1,7 +1,7 @@
 # EqualZ - a simple standalone LaTeX Math and MathML equation editor based on Python, PyQt5, Ziamath and CairoSVG
 EqualZ is a simplified clone of [EqualX](https://equalx.sourceforge.io/), but written in Python and standalone, i.e. without depending on external tools. In other words, you don't have to install a full LaTeX stack and bloat your disk with another 900 MB (as in case of MiKTeX) if you only want to render some simple math equations. 
 
-It instead uses bundled versions of [Ziamath](https://github.com/cdelker/ziamath) to render LaTeX Math and MathML to SVG and [CairoSVG](https://cairosvg.org/) to convert SVG to other formats. Since no external processes have to be started, equations are also rendered way faster (instantly) than in EqualX.
+It instead uses bundled versions of [Ziamath](https://github.com/cdelker/ziamath) to render [LaTeX Math](https://en.wikipedia.org/wiki/LaTeX) and [MathML](https://en.wikipedia.org/wiki/MathML) to SVG and [CairoSVG](https://cairosvg.org/) to convert SVG to other formats. Since no external processes have to be started, equations are also rendered way faster (instantly) than in EqualX.
 
 ## Supported export formats
 * BMP
