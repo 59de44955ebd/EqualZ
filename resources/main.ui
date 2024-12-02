@@ -534,6 +534,7 @@
     <property name="title">
      <string>&amp;Edit</string>
     </property>
+    <addaction name="actionRender"/>
     <addaction name="actionBookmark"/>
     <addaction name="separator"/>
     <addaction name="actionEditUndo"/>
@@ -550,8 +551,6 @@
     <property name="title">
      <string>&amp;View</string>
     </property>
-    <addaction name="actionRender"/>
-    <addaction name="separator"/>
     <addaction name="actionViewSymbolsToolbar"/>
     <addaction name="actionViewTemplatesToolbar"/>
     <addaction name="separator"/>
@@ -883,6 +882,9 @@
    <property name="text">
     <string>Bookmark This Equation</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+B</string>
+   </property>
   </action>
   <action name="actionViewSymbolsToolbar">
    <property name="checkable">
@@ -893,6 +895,9 @@
    </property>
    <property name="text">
     <string>Symbols Toolbar</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+S</string>
    </property>
   </action>
   <action name="actionViewTemplatesToolbar">
@@ -912,6 +917,9 @@
    <property name="toolTip">
     <string>A ToolBar with predefined equations</string>
    </property>
+   <property name="shortcut">
+    <string>Alt+T</string>
+   </property>
   </action>
   <action name="actionViewHistory">
    <property name="checkable">
@@ -926,6 +934,9 @@
    <property name="toolTip">
     <string>The Library contains your Bookmarks &amp; History</string>
    </property>
+   <property name="shortcut">
+    <string>Alt+H</string>
+   </property>
   </action>
   <action name="actionViewBookmarks">
    <property name="checkable">
@@ -936,6 +947,9 @@
    </property>
    <property name="text">
     <string>Bookmarks Panel</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+B</string>
    </property>
   </action>
   <action name="actionSaveTextFile">
@@ -952,6 +966,9 @@
   <action name="actionEditorFont">
    <property name="text">
     <string>Set Editor Font...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+F</string>
    </property>
   </action>
  </widget>
