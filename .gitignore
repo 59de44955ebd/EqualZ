@@ -1,0 +1,14 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+data/
+build/
+dist/
+stuff/
+_backup.rar
+
+# Environments
+/nsis/uninstall_list.nsh
