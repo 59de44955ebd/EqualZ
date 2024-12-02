@@ -48,7 +48,7 @@ class RenderLabel(QLabel):
         mx = int((w - self._width) / 2) if w > self._width else 0
         my = int((h- self._height) / 2) if h > self._height else 0
         #self.setContentsMargins(mx, my, mx, my)
-        self.setStyleSheet(f'padding: {my} {mx}')
+        self.setStyleSheet(f'QLabel{{padding: {my} {mx};}}')
 
     ########################################
     #
