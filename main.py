@@ -43,6 +43,7 @@ class RenderMode():
     Display = 0
     Inline = 1
     Text = 2
+    MathML = 3
 
 
 ########################################
@@ -88,6 +89,7 @@ class Main(QMainWindow):
         self.button_group_render_mode.addButton(self.renderModeDisplay, RenderMode.Display)
         self.button_group_render_mode.addButton(self.renderModeInline, RenderMode.Inline)
         self.button_group_render_mode.addButton(self.renderModeText, RenderMode.Text)
+        self.button_group_render_mode.addButton(self.renderModeMathML, RenderMode.MathML)
 
         self.editor.textChanged.connect(self.slot_text_changed)
 
@@ -322,7 +324,7 @@ class Main(QMainWindow):
             self,
             f'About {APP_NAME}',
             f'<b>{APP_NAME} v0.{APP_VERSION}</b><br><br>'\
-            'A simple standalone LaTeX Math Equation editor<br>based on Python, PyQt5, '\
+            'A simple standalone LaTeX Math and MathML Equation editor<br>based on Python, PyQt5, '\
             '<a href="https://pypi.org/project/ziamath/">Ziamath</a> and '\
             '<a href="https://cairosvg.org/">CairoSVG</a>.<br><br>'\
             f'<a href="https://github.com/59de44955ebd/equalz">{APP_NAME} on GitHub</a>'
@@ -446,7 +448,7 @@ class Main(QMainWindow):
         else:
             self.checkBoxTransparent.setChecked(True)
         self.button_group_render_mode.button(bm['render_mode']).setChecked(True)
-        self.slot_render()
+        self.slot_render(add_to_history=False)
 
     ########################################
     #
@@ -576,10 +578,11 @@ class Main(QMainWindow):
     ########################################
     #
     ########################################
-    def slot_render(self):
+    def slot_render(self, _=None, add_to_history=True):
         tex = self.editor.toPlainText()
         if not tex:
             return
+        self.statusBar.clearMessage()
         try:
             self._current_tex = tex
             self._current_rendermode = self.button_group_render_mode.checkedId()
@@ -587,7 +590,13 @@ class Main(QMainWindow):
             self._current_bgcolor = '' if self.checkBoxTransparent.isChecked() else self.toolButtonBgColor.color().name()
             self._current_fontsize = self.spinBoxFontSize.value()
 
-            if self._current_rendermode == RenderMode.Text:
+            if self._current_rendermode == RenderMode.MathML:
+                zm.config.math.color = self._current_color
+                res = zm.Math(
+                    tex,
+                    size=self._current_fontsize
+                )
+            elif self._current_rendermode == RenderMode.Text:
                 #######################################
                 # Mixed text and latex math. Inline math delimited by single $..$, and display-mode math delimited
                 # by double $$…$$. Can contain multiple lines. Drawn to SVG
@@ -620,27 +629,27 @@ class Main(QMainWindow):
             pm.loadFromData(self._current_png, 'png')
             self.renderLabel.setPixmap(pm)
 
-            # add to history
-            history_png = os.path.join(HISTORY_DIR, f'{self._current_uid}.png')
-            with open(history_png, 'wb') as f:
-                f.write(self._current_png)
+            if add_to_history:
+                history_png = os.path.join(HISTORY_DIR, f'{self._current_uid}.png')
+                with open(history_png, 'wb') as f:
+                    f.write(self._current_png)
 
-            dt = datetime.now().isoformat(' ', timespec='seconds')
+                dt = datetime.now().isoformat(' ', timespec='seconds')
 
-            self._history[self._current_uid] = {
-                'datetime': dt,
-                'tex': self._current_tex,
-                'color': self._current_color,
-                'bgcolor': self._current_bgcolor,
-                'fontsize': self._current_fontsize,
-                'render_mode': self._current_rendermode,
-            }
+                self._history[self._current_uid] = {
+                    'datetime': dt,
+                    'tex': self._current_tex,
+                    'color': self._current_color,
+                    'bgcolor': self._current_bgcolor,
+                    'fontsize': self._current_fontsize,
+                    'render_mode': self._current_rendermode,
+                }
 
-            lwi = QListWidgetItem()
-            lwi.setIcon(QIcon(history_png))
-            lwi.setData(Qt.UserRole, self._current_uid)
-            lwi.setToolTip(f"Saved on: {dt}")
-            self.listWidgetHistory.insertItem(0, lwi)
+                lwi = QListWidgetItem()
+                lwi.setIcon(QIcon(history_png))
+                lwi.setData(Qt.UserRole, self._current_uid)
+                lwi.setToolTip(f"Saved on: {dt}")
+                self.listWidgetHistory.insertItem(0, lwi)
 
             self.actionBookmark.setEnabled(True)
             self.toolButtonBookmark.setEnabled(True)
