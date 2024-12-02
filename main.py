@@ -18,7 +18,7 @@ APP_VERSION = 1
 APP_DIR = os.path.dirname(os.path.realpath(__file__))
 
 IS_FROZEN = getattr(sys, "frozen", False)
-IS_PORTABLE = IS_FROZEN and os.path.isfile(os.path.join(APP_DIR, 'portable'))
+IS_PORTABLE = IS_FROZEN and os.path.isfile(os.path.join(APP_DIR, '..', 'portable'))
 
 if IS_FROZEN:
     if IS_PORTABLE:
@@ -64,10 +64,7 @@ class Main(QMainWindow):
         qss.open(QFile.ReadOnly)
         qApp.setStyleSheet(bytes(qss.readAll()).decode())
 
-#        if IS_PORTABLE:
         self._state = QSettings(os.path.join(DATA_DIR, 'state.ini'), QSettings.IniFormat)
-#        else.
-#            self._state = QSettings('fx', APP_NAME)
 
         self._bookmarks = self._state.value('Bookmarks')
         if type(self._bookmarks) != dict:
@@ -101,7 +98,8 @@ class Main(QMainWindow):
 
         self.toolBarTemplates.addWidget(self.templatesBar)
 
-        symbol_settings = QSettings(os.path.join(APP_DIR, 'resources', 'symbols', 'symbols.ini'), QSettings.IniFormat)
+        symbol_settings = QSettings(os.path.join(APP_DIR, 'resources', 'symbols', 'symbols.ini'),
+                QSettings.IniFormat)
         for g in symbol_settings.childGroups():
             group_dir = os.path.join(APP_DIR, 'resources', 'symbols', g)
 
@@ -118,14 +116,16 @@ class Main(QMainWindow):
             tb.setMenu(menu)
             cnt = int(symbol_settings.value('symbols/size'))
             for i in range(1, cnt + 1):
-                action = menu.addAction(QIcon(os.path.join(group_dir, symbol_settings.value(f'symbols/{i}/icon'))), symbol_settings.value(f'symbols/{i}/name'))
+                action = menu.addAction(QIcon(os.path.join(group_dir, symbol_settings.value(f'symbols/{i}/icon'))),
+                        symbol_settings.value(f'symbols/{i}/name'))
                 action.setData(symbol_settings.value(f'symbols/{i}/latex'))
                 if i == 1:
                     tb.setDefaultAction(action)
 
             symbol_settings.endGroup()
 
-        templates_settings = QSettings(os.path.join(APP_DIR, 'resources', 'templates', 'templates.ini'), QSettings.IniFormat)
+        templates_settings = QSettings(os.path.join(APP_DIR, 'resources', 'templates', 'templates.ini'),
+                QSettings.IniFormat)
         for g in templates_settings.childGroups():
             group_dir = os.path.join(APP_DIR, 'resources', 'templates', g)
             templates_settings.beginGroup(g)
@@ -214,7 +214,8 @@ class Main(QMainWindow):
                 return
             cm = QMenu(self.listWidgetBookmarks)
             a = cm.addAction('Load Equation')
-            a.triggered.connect(lambda: self.slot_bookmark_double_clicked(self.listWidgetBookmarks.currentItem()))
+            a.triggered.connect(lambda: self.slot_bookmark_double_clicked(
+                    self.listWidgetBookmarks.currentItem()))
             cm.addSeparator()
             a = cm.addAction('Remove Equation')
             a.triggered.connect(self.slot_bookmark_remove)
@@ -222,7 +223,8 @@ class Main(QMainWindow):
 
         self.listWidgetBookmarks.customContextMenuRequested.connect(_context_menu_requested)
 
-        self._bookmarks = dict(sorted(self._bookmarks.items(), key=lambda row: row[1]['datetime'], reverse=True))
+        self._bookmarks = dict(sorted(self._bookmarks.items(), key=lambda row: row[1]['datetime'],
+                reverse=True))
 
         for uid, row in self._bookmarks.items():
             lwi = QListWidgetItem(self.listWidgetBookmarks)
@@ -232,7 +234,8 @@ class Main(QMainWindow):
 
         self.listWidgetBookmarks.itemDoubleClicked.connect(self.slot_bookmark_double_clicked)
 
-        self.dockWidgetBookmarks.visibilityChanged.connect(lambda _: self.actionViewBookmarks.setChecked(self.dockWidgetBookmarks.isVisible()))
+        self.dockWidgetBookmarks.visibilityChanged.connect(lambda _:
+                self.actionViewBookmarks.setChecked(self.dockWidgetBookmarks.isVisible()))
 
     ########################################
     #
@@ -266,7 +269,8 @@ class Main(QMainWindow):
 
         self.listWidgetHistory.itemDoubleClicked.connect(self.slot_history_double_clicked)
 
-        self.dockWidgetHistory.visibilityChanged.connect(lambda _: self.actionViewHistory.setChecked(self.dockWidgetHistory.isVisible()))
+        self.dockWidgetHistory.visibilityChanged.connect(lambda _: self.actionViewHistory.setChecked(
+                self.dockWidgetHistory.isVisible()))
 
     def __EVENTS(): pass
 
@@ -317,7 +321,11 @@ class Main(QMainWindow):
         QMessageBox.about(
             self,
             f'About {APP_NAME}',
-            f'<b>{APP_NAME} v0.{APP_VERSION}</b><br><br>A simple standalone LaTeX Math Equation editor<br>based on Python, PyQt5, <a href="https://pypi.org/project/ziamath/">Ziamath</a> and <a href="https://cairosvg.org/">CairoSVG</a>.<br><br><a href="https://github.com/59de44955ebd/equalz">{APP_NAME} on GitHub</a>'
+            f'<b>{APP_NAME} v0.{APP_VERSION}</b><br><br>'\
+            'A simple standalone LaTeX Math Equation editor<br>based on Python, PyQt5, '\
+            '<a href="https://pypi.org/project/ziamath/">Ziamath</a> and '\
+            '<a href="https://cairosvg.org/">CairoSVG</a>.<br><br>'\
+            f'<a href="https://github.com/59de44955ebd/equalz">{APP_NAME} on GitHub</a>'
         )
 
     ########################################
@@ -393,7 +401,8 @@ class Main(QMainWindow):
     #
     ########################################
     def slot_history_clear(self):
-        res = QMessageBox.question(self, 'Clear History', 'Do you really want to remove all equations from the history?')
+        res = QMessageBox.question(self, 'Clear History',
+                'Do you really want to remove all equations from the history?')
         if res != QMessageBox.Yes:
             return
 
@@ -489,7 +498,8 @@ class Main(QMainWindow):
         if not tex:
             return
 
-        fltr = 'BMP File (*.bmp);;JPEG File (*.jpg);;PNG File (*.png);;PDF File (*.pdf);;SVG File (*.svg);;TeX File (*.tex);;TIFF File (*.tif)'
+        fltr = 'BMP File (*.bmp);;JPEG File (*.jpg);;PNG File (*.png);;PDF File (*.pdf);;SVG File (*.svg);;'\
+            'TeX File (*.tex);;TIFF File (*.tif)'
         fn, fltr = QFileDialog.getSaveFileName(self, 'Save Equation as...', os.path.join(APP_DIR, 'equation'), fltr)
         if not fn:
             return
@@ -529,22 +539,12 @@ class Main(QMainWindow):
                     pm.loadFromData(png_data, 'png')
                     pm.save(fn, quality=100)
                 elif fmt == 'TIFF':
-#                    png_data = cairosvg.svg2png(
-#                        bytestring=self._current_svg,
-#                        background_color=self._current_bgcolor if self._current_bgcolor else None
-#                    )
-#                    pm = QPixmap()
-#                    pm.loadFromData(png_data, 'png')
-#                    pm.save(fn, quality=100)
+                    pm = QPixmap()
                     pm.loadFromData(self._current_png, 'png')
                     pm.save(fn, quality=100)
                 else:
                     with open(fn, 'wb') as f:
                         if fmt == 'PNG':
-#                            f.write(cairosvg.svg2png(
-#                                bytestring=self._current_svg,
-#                                background_color=self._current_bgcolor if self._current_bgcolor else None
-#                            ))
                             f.write(self._current_png)
                         elif fmt == 'PDF':
                             f.write(cairosvg.svg2pdf(
@@ -569,7 +569,7 @@ class Main(QMainWindow):
     #
     ########################################
     def slot_select_bgcolor(self):
-        col = QColorDialog.getColor(self.toolButtonBgColor.color(), self)  #, options=QColorDialog.ShowAlphaChannel)
+        col = QColorDialog.getColor(self.toolButtonBgColor.color(), self)
         if col.isValid():
             self.toolButtonBgColor.setColor(col)
 
@@ -584,7 +584,7 @@ class Main(QMainWindow):
             self._current_tex = tex
             self._current_rendermode = self.button_group_render_mode.checkedId()
             self._current_color = self.toolButtonColor.color().name()
-            self._current_bgcolor = self.toolButtonBgColor.color().name() if not self.checkBoxTransparent.isChecked() else ''
+            self._current_bgcolor = '' if self.checkBoxTransparent.isChecked() else self.toolButtonBgColor.color().name()
             self._current_fontsize = self.spinBoxFontSize.value()
 
             if self._current_rendermode == RenderMode.Text:
@@ -660,6 +660,5 @@ if __name__ == '__main__':
     sys.excepthook = traceback.print_exception
     QApplication.setStyle('Fusion')
     app = QApplication(sys.argv)
-    #app.setAttribute(Qt.AA_DontShowIconsInMenus, True)
     main = Main()
     sys.exit(app.exec_())
