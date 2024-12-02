@@ -1,3 +1,9 @@
 QListWidget:item {
     margin: 5px auto;
 }
+QTabWidget::pane {
+    border-top: 1px solid #BDBDBD;
+}
+QToolBar {
+	border: none;
+}
