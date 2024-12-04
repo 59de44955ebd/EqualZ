@@ -407,6 +407,9 @@
             <property name="toolTip">
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Display Mode&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Render equations separate from other paragraphs; on a single line of its own.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;\\ &lt;/span&gt;specifies a line break.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
+            <property name="statusTip">
+             <string>LaTeX Math - Display Mode</string>
+            </property>
             <property name="text">
              <string>Display</string>
             </property>
@@ -442,6 +445,9 @@
             <property name="toolTip">
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Inline Mode&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Render equations inside text.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;\\ &lt;/span&gt;specifies a line break.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
+            <property name="statusTip">
+             <string>LaTeX Math - Inline Mode</string>
+            </property>
             <property name="text">
              <string>Inline</string>
             </property>
@@ -470,6 +476,9 @@
             </property>
             <property name="toolTip">
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Text Mode&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Mixed text and latex math. Inline math delimited by single $..$, and display-mode math delimited by double $$…$$.&lt;/p&gt;&lt;p&gt;Line breaks are taken into account.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="statusTip">
+             <string>Text Mode - LaTeX Math equations have to be enclosed in either $...$ or $$...$$</string>
             </property>
             <property name="text">
              <string>Text</string>
@@ -500,6 +509,9 @@
             <property name="toolTip">
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;MathML&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Mathematical Markup Language&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
+            <property name="statusTip">
+             <string>MathML</string>
+            </property>
             <property name="text">
              <string>MathML</string>
             </property>
@@ -524,12 +536,6 @@
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
-          </property>
-          <property name="font">
-           <font>
-            <family>Consolas</family>
-            <pointsize>11</pointsize>
-           </font>
           </property>
           <property name="acceptDrops">
            <bool>false</bool>

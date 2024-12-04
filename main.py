@@ -20,11 +20,39 @@ APP_DIR = os.path.dirname(os.path.realpath(__file__))
 IS_FROZEN = getattr(sys, "frozen", False)
 IS_PORTABLE = IS_FROZEN and os.path.isfile(os.path.join(APP_DIR, '..', 'portable'))
 
+IS_WIN = sys.platform == 'win32'
+IS_MAC = sys.platform == 'darwin'
+IS_LINUX = not IS_WIN and not IS_MAC
+
+if IS_WIN:
+    from ctypes import windll
+    ShouldAppsUseDarkMode = windll.UxTheme[136]
+    IS_DARK = ShouldAppsUseDarkMode()
+elif IS_MAC:
+    import subprocess
+    p = subprocess.Popen('defaults read -g AppleInterfaceStyle', stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+    IS_DARK = bool(p.communicate()[0])
+else:
+    IS_DARK = True  # TODO: handle Linux/qt5ct!
+
+# RES_DIR
+if IS_FROZEN and IS_MAC:
+    RES_DIR = os.path.realpath(os.path.join(APP_DIR, '..', 'Resources'))
+else:
+    RES_DIR = os.path.join(APP_DIR, 'resources')
+
+# DATA_DIR
 if IS_FROZEN:
     if IS_PORTABLE:
-        DATA_DIR = os.path.join(APP_DIR, '..', 'data')
+        if IS_MAC:
+            DATA_DIR = os.path.join(APP_DIR, '..', '..', 'data')
+        else:
+            DATA_DIR = os.path.join(APP_DIR, '..', 'data')
     else:
-        DATA_DIR = os.path.join(os.environ['USERPROFILE'], f'.{APP_NAME.lower()}')
+        if IS_WIN:
+            DATA_DIR = os.path.join(os.environ['USERPROFILE'], f'.{APP_NAME.lower()}')
+        else:
+            DATA_DIR = os.path.join(os.environ['HOME'], f'.{APP_NAME.lower()}')
 else:
     DATA_DIR = os.path.join(APP_DIR, 'data')
 
@@ -58,10 +86,34 @@ class Main(QMainWindow):
         self._current_png = None
         self._current_svg = None
 
-        QResource.registerResource(os.path.join(APP_DIR, 'resources', 'main.rcc'))
-        uic.loadUi(os.path.join(APP_DIR, 'resources', 'main.ui'), self)
+        QResource.registerResource(os.path.join(RES_DIR, 'main.rcc'))
+        uic.loadUi(os.path.join(RES_DIR, 'main.ui'), self)
 
-        qss = QFile(':/stylesheet.qss')
+        if IS_DARK:
+            qss = QFile(':/stylesheet-dark.qss')
+            if not IS_LINUX:
+                pal = QPalette()
+                white = QColor(224, 224, 224)
+                pal.setColor(QPalette.Window, QColor(43, 43, 43))
+                pal.setColor(QPalette.WindowText, white)
+                pal.setColor(QPalette.Base, QColor(43, 43, 43))
+                pal.setColor(QPalette.AlternateBase, QColor(48, 48, 48))
+                pal.setColor(QPalette.Text, white)
+                pal.setColor(QPalette.Dark, QColor(35, 35, 35))
+                pal.setColor(QPalette.Shadow, QColor(20, 20, 20))
+                pal.setColor(QPalette.Button, QColor(43, 43, 43))
+                pal.setColor(QPalette.ButtonText, white)
+                pal.setColor(QPalette.Link, QColor('#5D9BF8'))
+                pal.setColor(QPalette.Highlight, QColor('#0A3B76'))  # background of selection
+                pal.setColor(QPalette.HighlightedText, white)
+                pal.setColor(QPalette.Disabled, QPalette.Text, QColor(127, 127, 127))
+                pal.setColor(QPalette.Disabled, QPalette.WindowText, QColor(127, 127, 127))
+                pal.setColor(QPalette.Disabled, QPalette.HighlightedText, QColor(127, 127, 127))
+                pal.setColor(QPalette.Disabled, QPalette.ButtonText, QColor(127, 127, 127))
+                pal.setColor(QPalette.Disabled, QPalette.Highlight, QColor(80, 80, 80))
+                qApp.setPalette(pal)
+        else:
+            qss = QFile(':/stylesheet.qss')
         qss.open(QFile.ReadOnly)
         qApp.setStyleSheet(bytes(qss.readAll()).decode())
 
@@ -77,7 +129,9 @@ class Main(QMainWindow):
 
         self.renderButton.clicked.connect(self.slot_render)
 
+        self.toolButtonColor.setColor(QColor(Qt.white if IS_DARK else Qt.black))
         self.toolButtonColor.clicked.connect(self.slot_select_color)
+
         self.toolButtonBgColor.setColor(QColor(Qt.white))
         self.toolButtonBgColor.clicked.connect(self.slot_select_bgcolor)
         self.toolButtonBgColor.hide()
@@ -100,10 +154,10 @@ class Main(QMainWindow):
 
         self.toolBarTemplates.addWidget(self.templatesBar)
 
-        symbol_settings = QSettings(os.path.join(APP_DIR, 'resources', 'symbols', 'symbols.ini'),
+        symbol_settings = QSettings(os.path.join(RES_DIR, 'symbols', 'symbols.ini'),
                 QSettings.IniFormat)
         for g in symbol_settings.childGroups():
-            group_dir = os.path.join(APP_DIR, 'resources', 'symbols', g)
+            group_dir = os.path.join(RES_DIR, 'symbols', g)
 
             symbol_settings.beginGroup(g)
 
@@ -126,10 +180,10 @@ class Main(QMainWindow):
 
             symbol_settings.endGroup()
 
-        templates_settings = QSettings(os.path.join(APP_DIR, 'resources', 'templates', 'templates.ini'),
+        templates_settings = QSettings(os.path.join(RES_DIR, 'templates', 'templates.ini'),
                 QSettings.IniFormat)
         for g in templates_settings.childGroups():
-            group_dir = os.path.join(APP_DIR, 'resources', 'templates', g)
+            group_dir = os.path.join(RES_DIR, 'templates', g)
             templates_settings.beginGroup(g)
 
             page = QWidget(self)
@@ -144,10 +198,14 @@ class Main(QMainWindow):
                 if type(v) == list:
                     v = ','.join(v)
                 ico = QIcon(os.path.join(group_dir, k))
-                s = ico.availableSizes()[0]
-                s.setHeight(46)
+                size = ico.availableSizes()[0]
+                if IS_DARK:
+                    img = ico.pixmap(size).toImage()
+                    img.invertPixels()
+                    ico = QIcon(QPixmap.fromImage(img))
+                size.setHeight(46)
                 tb = QToolButton(self)
-                tb.setIconSize(s)
+                tb.setIconSize(size)
                 tb.setIcon(ico)
                 layout.addWidget(tb)
                 tb.pressed.connect(lambda tex=v: self.editor.insertPlainText(tex))
@@ -155,6 +213,19 @@ class Main(QMainWindow):
             templates_settings.endGroup()
 
             layout.addStretch()
+
+        if IS_DARK:
+            for act in self.findChildren(QAction):
+                ico_old = act.icon()
+                if not ico_old.isNull():
+                    size = ico_old.availableSizes()[0]
+                    img = ico_old.pixmap(size).toImage()
+                    img.invertPixels()
+                    ico_new = QIcon(QPixmap.fromImage(img))
+                    act.setIcon(ico_new)
+
+        if IS_DARK:
+            self.editor.set_colors(QColor('#68D4FF'), QColor('#EE5278'), QColor('#72994C'))
 
         # restore saved state
         val = self._state.value('MainWindow/Geometry')
@@ -172,7 +243,9 @@ class Main(QMainWindow):
         if val:
             font = QFont()
             font.fromString(val)
-            self.editor.setFont(font)
+        else:
+            font = QFont('Consolas', 11) if IS_WIN else QFont('Menlo', 14)
+        self.editor.setFont(font)
 
         self.show()
 
@@ -327,7 +400,7 @@ class Main(QMainWindow):
             self,
             f'About {APP_NAME}',
             f'<b>{APP_NAME} v0.{APP_VERSION}</b><br><br>'\
-            'A simple standalone LaTeX Math and MathML Equation editor<br>based on Python, PyQt5, '\
+            'A simple standalone LaTeX Math and MathML Equation editor based on Python, PyQt5, '\
             '<a href="https://pypi.org/project/ziamath/">Ziamath</a> and '\
             '<a href="https://cairosvg.org/">CairoSVG</a>.<br><br>'\
             f'<a href="https://github.com/59de44955ebd/equalz">{APP_NAME} on GitHub</a>'
@@ -670,6 +743,8 @@ class Main(QMainWindow):
 ########################################
 if __name__ == '__main__':
     sys.excepthook = traceback.print_exception
+    if IS_WIN and IS_DARK:
+        os.environ["QT_QPA_PLATFORM"] = "windows:darkmode=1"
     QApplication.setStyle('Fusion')
     app = QApplication(sys.argv)
     main = Main()

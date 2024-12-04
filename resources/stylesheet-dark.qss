@@ -1,0 +1,133 @@
+QDockWidget,
+QListWidget,
+QMainWindow,
+QTabBar
+{
+	border-color: #2b2b2b;
+	background-color: #202020;
+}
+QToolBar {
+	border: none;
+}
+QDialog,
+QDockWidget,
+QLabel,
+QListView,
+QMainWindow,
+QPlainTextEdit,
+QPushButton,
+QSpinBox,
+QStatusBar,
+QTabBar::tab,
+QToolBox
+{
+	color: #e0e0e0;
+}
+QComboBox,
+QSpinBox
+{
+    background-color: #353535;
+}
+QDialog {
+	border-color: #2b2b2b;
+	background-color: #2b2b2b;
+}
+RenderLabel,
+QListWidget,
+QPlainTextEdit
+{
+	border: 1px solid #4e4e4e;
+}
+QListView
+{
+	show-decoration-selected: 1;
+	selection-background-color: #0A3B76;
+}
+QListWidget:item {
+    margin: 5px;
+}
+QMainWindow::separator {
+	background: #202020;
+}
+QSplitter::handle {
+	background: none;
+}
+QMenu,
+QMenuBar
+{
+	color: #e0e0e0;
+	selection-background-color: #353535;
+	selection-color: #ffffff;
+}
+QMenuBar
+{
+	background-color: #2b2b2b;
+}
+QMenu {
+	background-color: #2b2b2b;
+	padding: 3px;
+	border: 1px solid #3f3f3f;
+	border-radius: 5px;
+}
+QMenu::item:disabled {
+	color: #666666;
+}
+QMenu::separator {
+	height: 1px;
+	background-color: #3f3f3f;
+}
+QPlainTextEdit
+{
+	background-color: #202020;
+}
+QTabBar::tab:top {
+	padding: 6px 12px 7px 12px;
+	border: 1px solid #444;
+	border-left: none;
+	border-bottom: none;
+	margin-top: 2px;
+	border-radius: 3px;
+	border-bottom-left-radius: 0;
+	border-bottom-right-radius: 0;
+}
+QTabBar::tab:selected {
+	background-color: #353535;
+
+}
+QTabWidget::pane:top {
+	border-top: 1px solid #353535;
+}
+QPushButton {
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #2F2F2F, stop:1 #272727);
+    padding: 3px 6px;
+    border: 1px solid #646464;
+    border-radius: 3px;
+    min-width: 60px;
+}
+QPushButton:disabled
+{
+	color: #666666;
+}
+QPushButton:default {
+    border: 1px solid #2f65ca;
+}
+QPushButton:hover {
+	background-color: #454545;
+}
+QPushButton:pressed {
+	background-color: #353535;
+}
+QToolButton:pressed,
+QToolButton:pressed:hover,
+QToolButton:checked,
+QToolButton:checked:hover {
+	background-color: #353535;
+}
+QToolButton:hover {
+	background-color: #353535;
+}
+QToolTip {
+    background-color: #2B2B2B;
+    color: #ffffff;
+    border: 1px solid #767676;
+}

@@ -1,7 +1,7 @@
 QListWidget:item {
-    margin: 5px auto;
+    margin: 5px;
 }
-QTabWidget::pane {
+QTabWidget::pane:top {
     border-top: 1px solid #BDBDBD;
 }
 QToolBar {

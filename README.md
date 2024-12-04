@@ -22,6 +22,5 @@ It instead uses bundled versions of [Ziamath](https://github.com/cdelker/ziamath
 * The portable version for Windows saves bookmarks and history in a local folder called `data`, whereas the installer version creates and uses the folder `C:\Users\<Username>\.equalz`.  
 The app detects at runtime if it runs in portable or installer mode by looking for a file called "portable" next to the .exe.
 
-## ToDos
-* Create frozen release for macOS as well
+## ToDo
 * Add syntax highlighting for MathML

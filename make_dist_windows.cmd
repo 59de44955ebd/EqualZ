@@ -18,8 +18,8 @@ echo ****************************************
 echo Running pyinstaller...
 echo ****************************************
 
-pyinstaller --noupx -w -i "%APP_ICON%" -n "%APP_NAME%" --version-file=version_res.txt --hidden-import ziamath.fonts --hidden-import colorbutton --hidden-import latexeditor --hidden-import renderlabel -D main.py
-::pyinstaller %APP_NAME%.spec
+::pyinstaller --noupx -w -i "%APP_ICON%" -n "%APP_NAME%" --version-file=version_res.txt --hidden-import ziamath.fonts --hidden-import colorbutton --hidden-import latexeditor --hidden-import renderlabel -D main.py
+pyinstaller %APP_NAME%_windows.spec
 
 echo.
 echo ****************************************
