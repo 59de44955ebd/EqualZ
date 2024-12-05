@@ -5,7 +5,7 @@ cd "$(dirname "$0")"
 
 rm -R "dist/$APP_NAME" 2>/dev/null
 rm -R "dist/$APP_NAME.app" 2>/dev/null
-rm "dist/$APP_NAME.dmg" 2>/dev/null
+rm "dist/$APP_NAME-macos.dmg" 2>/dev/null
 
 echo
 echo '****************************************'

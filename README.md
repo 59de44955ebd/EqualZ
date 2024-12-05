@@ -17,6 +17,10 @@ The frozen Windows version has no external dependencies, but the macOS version d
 
 `brew install cairo`
 
+In Linux libcairo is most likely already installed, otherwise run (in Debian/Ubuntu based systems):
+
+`sudo apt install libcairo2`
+
 ## Screenshot
 *EqualZ in Windows 11*  
 ![EqualZ in Windows 131](screenshots/equalz_win11.png)

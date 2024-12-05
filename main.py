@@ -32,7 +32,20 @@ elif IS_MAC:
     p = subprocess.Popen('defaults read -g AppleInterfaceStyle', stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
     IS_DARK = bool(p.communicate()[0])
 else:
-    IS_DARK = True  # TODO: handle Linux/qt5ct!
+    import subprocess
+    try:
+        out = subprocess.run(
+            ['gsettings', 'get', 'org.gnome.desktop.interface', 'color-scheme'],
+            capture_output=True)
+        stdout = out.stdout.decode()
+        if len(stdout) < 1:
+            out = subprocess.run(
+                ['gsettings', 'get', 'org.gnome.desktop.interface', 'gtk-theme'],
+                capture_output=True)
+            stdout = out.stdout.decode()
+        IS_DARK = '-dark' in stdout.lower().strip()[1:-1]
+    except:
+        IS_DARK = False
 
 if IS_FROZEN and IS_MAC:
     RES_DIR = os.path.realpath(os.path.join(APP_DIR, '..', 'Resources'))
@@ -88,27 +101,26 @@ class Main(QMainWindow):
 
         if IS_DARK:
             qss = QFile(':/stylesheet-dark.qss')
-            if not IS_LINUX:
-                pal = QPalette()
-                white = QColor(224, 224, 224)
-                pal.setColor(QPalette.Window, QColor(43, 43, 43))
-                pal.setColor(QPalette.WindowText, white)
-                pal.setColor(QPalette.Base, QColor(43, 43, 43))
-                pal.setColor(QPalette.AlternateBase, QColor(48, 48, 48))
-                pal.setColor(QPalette.Text, white)
-                pal.setColor(QPalette.Dark, QColor(35, 35, 35))
-                pal.setColor(QPalette.Shadow, QColor(20, 20, 20))
-                pal.setColor(QPalette.Button, QColor(43, 43, 43))
-                pal.setColor(QPalette.ButtonText, white)
-                pal.setColor(QPalette.Link, QColor('#5D9BF8'))
-                pal.setColor(QPalette.Highlight, QColor('#0A3B76'))  # background of selection
-                pal.setColor(QPalette.HighlightedText, white)
-                pal.setColor(QPalette.Disabled, QPalette.Text, QColor(127, 127, 127))
-                pal.setColor(QPalette.Disabled, QPalette.WindowText, QColor(127, 127, 127))
-                pal.setColor(QPalette.Disabled, QPalette.HighlightedText, QColor(127, 127, 127))
-                pal.setColor(QPalette.Disabled, QPalette.ButtonText, QColor(127, 127, 127))
-                pal.setColor(QPalette.Disabled, QPalette.Highlight, QColor(80, 80, 80))
-                qApp.setPalette(pal)
+            pal = QPalette()
+            white = QColor(224, 224, 224)
+            pal.setColor(QPalette.Window, QColor(43, 43, 43))
+            pal.setColor(QPalette.WindowText, white)
+            pal.setColor(QPalette.Base, QColor(43, 43, 43))
+            pal.setColor(QPalette.AlternateBase, QColor(48, 48, 48))
+            pal.setColor(QPalette.Text, white)
+            pal.setColor(QPalette.Dark, QColor(35, 35, 35))
+            pal.setColor(QPalette.Shadow, QColor(20, 20, 20))
+            pal.setColor(QPalette.Button, QColor(43, 43, 43))
+            pal.setColor(QPalette.ButtonText, white)
+            pal.setColor(QPalette.Link, QColor('#5D9BF8'))
+            pal.setColor(QPalette.Highlight, QColor('#0A3B76'))  # background of selection
+            pal.setColor(QPalette.HighlightedText, white)
+            pal.setColor(QPalette.Disabled, QPalette.Text, QColor(127, 127, 127))
+            pal.setColor(QPalette.Disabled, QPalette.WindowText, QColor(127, 127, 127))
+            pal.setColor(QPalette.Disabled, QPalette.HighlightedText, QColor(127, 127, 127))
+            pal.setColor(QPalette.Disabled, QPalette.ButtonText, QColor(127, 127, 127))
+            pal.setColor(QPalette.Disabled, QPalette.Highlight, QColor(80, 80, 80))
+            qApp.setPalette(pal)
         else:
             qss = QFile(':/stylesheet.qss')
         qss.open(QFile.ReadOnly)
@@ -180,7 +192,7 @@ class Main(QMainWindow):
         templates_settings = QSettings(os.path.join(RES_DIR, 'templates', 'templates.ini'),
                 QSettings.IniFormat)
         for g in templates_settings.childGroups():
-            group_dir = os.path.join(RES_DIR, 'templates', g)
+            group_dir = os.path.join(RES_DIR, 'templates', g.lower())
             templates_settings.beginGroup(g)
 
             page = QWidget(self)
@@ -241,7 +253,12 @@ class Main(QMainWindow):
             font = QFont()
             font.fromString(val)
         else:
-            font = QFont('Consolas', 11) if IS_WIN else QFont('Menlo', 14)
+            if IS_WIN:
+                font = QFont('Consolas', 11)
+            elif IS_MAC:
+                font = QFont('Menlo', 14)
+            else:
+                font = QFont('DejaVu Sans Mono', 12)
         self.editor.setFont(font)
 
         self.show()
