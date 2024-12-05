@@ -121,7 +121,7 @@ echo ****************************************
 cd dist
 echo.>"%APP_NAME%\portable"
 set PATH=C:\Program Files\7-Zip;%PATH%
-7z a "%APP_NAME%-x64-portable.7z" "%APP_NAME%\*"
+7z a "%APP_NAME%-windows-x64-portable.7z" "%APP_NAME%\*"
 del "%APP_NAME%\portable"
 cd ..
 exit /B

@@ -25,9 +25,8 @@ IS_MAC = sys.platform == 'darwin'
 IS_LINUX = not IS_WIN and not IS_MAC
 
 if IS_WIN:
-    from ctypes import windll
-    ShouldAppsUseDarkMode = windll.UxTheme[136]
-    IS_DARK = ShouldAppsUseDarkMode()
+    reg = QSettings(r'HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize', QSettings.NativeFormat)
+    IS_DARK = reg.value('AppsUseLightTheme', 1) == 0
 elif IS_MAC:
     import subprocess
     p = subprocess.Popen('defaults read -g AppleInterfaceStyle', stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
@@ -35,13 +34,11 @@ elif IS_MAC:
 else:
     IS_DARK = True  # TODO: handle Linux/qt5ct!
 
-# RES_DIR
 if IS_FROZEN and IS_MAC:
     RES_DIR = os.path.realpath(os.path.join(APP_DIR, '..', 'Resources'))
 else:
     RES_DIR = os.path.join(APP_DIR, 'resources')
 
-# DATA_DIR
 if IS_FROZEN:
     if IS_PORTABLE:
         if IS_MAC:

@@ -25,7 +25,7 @@
 Name "$%APP_NAME%"
 
 ; The file to write
-OutFile "..\dist\$%APP_NAME%-x64-setup.exe"
+OutFile "..\dist\$%APP_NAME%-windows-x64-setup.exe"
 
 ; Build Unicode installer
 Unicode True

@@ -102,7 +102,7 @@ mv "dist/$APP_NAME.app" "dist/dmg/$APP_NAME/"
 #mv "dist/presets.db" "dist/dmg/$APP_NAME/"
 
 ln -s /Applications "dist/dmg/Applications"
-hdiutil create -fs HFSX -format UDZO "dist/$APP_NAME.dmg" -imagekey zlib-level=9 -srcfolder "dist/dmg" -volname "$APP_NAME"
+hdiutil create -fs HFSX -format UDZO "dist/$APP_NAME-macos.dmg" -imagekey zlib-level=9 -srcfolder "dist/dmg" -volname "$APP_NAME"
 
 mv "dist/dmg/$APP_NAME/$APP_NAME.app" dist/
 #mv "dist/dmg/$APP_NAME/presets.db" dist/
