@@ -34,16 +34,17 @@ elif IS_MAC:
 else:
     import subprocess
     try:
-        out = subprocess.run(
-            ['gsettings', 'get', 'org.gnome.desktop.interface', 'color-scheme'],
-            capture_output=True)
-        stdout = out.stdout.decode()
-        if len(stdout) < 1:
+        if 'cinnamon' in os.environ['XDG_CURRENT_DESKTOP'].lower():
             out = subprocess.run(
-                ['gsettings', 'get', 'org.gnome.desktop.interface', 'gtk-theme'],
-                capture_output=True)
-            stdout = out.stdout.decode()
-        IS_DARK = '-dark' in stdout.lower().strip()[1:-1]
+                ['gsettings', 'get', 'org.cinnamon.theme', 'name'],
+                capture_output=True
+            ).stdout.decode()
+        else:
+            out = subprocess.run(
+                ['gsettings', 'get', 'org.gnome.desktop.interface', 'color-scheme'],
+                capture_output=True
+            ).stdout.decode()
+        IS_DARK = '-dark' in out.lower().strip()[1:-1]
     except:
         IS_DARK = False
 
