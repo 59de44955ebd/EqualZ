@@ -12,6 +12,11 @@ It instead uses bundled versions of [Ziamath](https://github.com/cdelker/ziamath
 * TeX
 * TIFF
 
+## macOS version
+The frozen Windows version has no external dependencies, but the macOS version depends on cairo which you can install via Homebrew:
+
+`brew install cairo`
+
 ## Screenshot
 *EqualZ in Windows 11*  
 ![EqualZ in Windows 131](screenshots/equalz_win11.png)
