@@ -34,7 +34,7 @@ elif IS_MAC:
 else:
     import subprocess
     try:
-        if 'cinnamon' in os.environ['XDG_CURRENT_DESKTOP'].lower():
+        if 'XDG_CURRENT_DESKTOP' in os.environ and 'cinnamon' in os.environ['XDG_CURRENT_DESKTOP'].lower():
             out = subprocess.run(
                 ['gsettings', 'get', 'org.cinnamon.theme', 'name'],
                 capture_output=True
